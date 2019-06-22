@@ -1,0 +1,37 @@
+import tensorflow as tf
+import numpy as np
+import cv2
+from src.data_loader.data_generator import DataGenerator
+from src.models.discriminator_model import DiscriminatorModel
+from src.trainers.discriminator_trainer import DiscriminatorTrainer
+from src.testers.discriminator_tester import DiscriminatorTester
+from src.utils.config import processing_config
+from src.utils.logger import  Logger
+from src.utils.utils import get_args
+
+
+def main():
+    try:
+        # args = get_args()
+        # print(args.config)
+        config = processing_config("/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/configs/config_model.json")
+        # config = processing_config(args.config)
+    except:
+        print("Missing or invalid arguments")
+        exit(0)
+
+    tf_config = tf.ConfigProto()
+    tf_config.gpu_options.per_process_gpu_memory_fraction = config.per_process_gpu_memory_fraction
+
+    sess = tf.Session()
+    data = DataGenerator(config, training=True, testing=True)
+    logger = Logger(sess, config)
+    model = DiscriminatorModel(config)
+    model.load(sess)
+    trainer = DiscriminatorTrainer(sess, model, data, config, logger)
+    trainer.train()
+    # tester = DiscriminatorTester(sess, model, data, config, logger)
+    # tester.test()
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,21 @@
+{
+  "num_epochs": 100,
+  "learning_rate": 0.0001,
+  "batch_size": 16,
+  "val_per_epoch": 1,
+  "state_size": [256, 256, 6],
+  "max_to_keep":1,
+  "use_val":true,
+  "per_process_gpu_memory_fraction":1,
+
+
+
+  "train_data_path":"/media/syrix/programms/projects/GP/SuperStreaming/benchmark/skipping/dataset/train/",
+  "val_data_path":"/media/syrix/programms/projects/GP/SuperStreaming/benchmark/skipping/dataset/val/",
+  "test_data_path":"/media/syrix/programms/projects/GP/SuperStreaming/benchmark/skipping/dataset/test/",
+  "meta_data_path":"/media/syrix/programms/projects/cifar-100-python/meta",
+  "summary_dir":"/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/saved_models/summary/",
+  "checkpoint_dir":"/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/saved_models/checkpoint/"
+
+}
+
