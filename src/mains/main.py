@@ -7,7 +7,7 @@ from src.trainers.discriminator_trainer import DiscriminatorTrainer
 from src.testers.discriminator_tester import DiscriminatorTester
 from src.utils.config import processing_config
 from src.utils.logger import  Logger
-from src.utils.utils import get_args
+from src.utils.utils import get_args, freeze_graph
 
 
 def main():
@@ -15,7 +15,7 @@ def main():
         # args = get_args()
         # print(args.config)
         config = processing_config("/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/configs/config_model.json")
-        # config = processing_config(args.config)
+    #     # config = processing_config(args.config)
     except:
         print("Missing or invalid arguments")
         exit(0)
@@ -25,13 +25,17 @@ def main():
 
     sess = tf.Session()
     data = DataGenerator(config, training=True, testing=True)
-    logger = Logger(sess, config)
     model = DiscriminatorModel(config)
     model.load(sess)
+    logger = Logger(sess, config)
+
     trainer = DiscriminatorTrainer(sess, model, data, config, logger)
     trainer.train()
-    # tester = DiscriminatorTester(sess, model, data, config, logger)
-    # tester.test()
 
+    tester = DiscriminatorTester(sess, model, data, config, logger)
+    tester.test()
+
+
+    freeze_graph(config.checkpoint_dir, "output")
 if __name__ == '__main__':
     main()

@@ -1,0 +1,1 @@
+<bound method Graph.as_graph_def of <tensorflow.python.framework.ops.Graph object at 0x7f6c03a80f60>>

@@ -12,6 +12,10 @@ class Logger:
                                                           self.sess.graph)
         self.test_summary_writer = tf.summary.FileWriter(os.path.join(self.config.summary_dir, "test"))
 
+        graph = sess.graph
+        with graph.as_default():
+            writer = tf.summary.FileWriter(logdir=self.config.summary_dir, graph=graph)
+            writer.flush()
 
 
     def summarize(self, step, summarizer="train", scope="", summaries_dict=None):

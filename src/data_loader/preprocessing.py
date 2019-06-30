@@ -36,9 +36,10 @@ def paths_to_images(paths, target_dims):
             img1 = scipy.misc.imresize(img1, (target_dims[0], target_dims[1]))
             img2 = scipy.misc.imresize(img2, (target_dims[0], target_dims[1]))
 
-        img = np.concatenate((img1, img2), axis=2)
-        imgs.append(img)
 
+        imgs.append((img1, img2))
+
+    imgs = np.asanyarray(imgs)
     return imgs
 
 
