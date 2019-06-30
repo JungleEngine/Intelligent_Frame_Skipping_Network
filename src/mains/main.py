@@ -32,10 +32,17 @@ def main():
     trainer = DiscriminatorTrainer(sess, model, data, config, logger)
     trainer.train()
 
-    tester = DiscriminatorTester(sess, model, data, config, logger)
-    tester.test()
-
-
-    freeze_graph(config.checkpoint_dir, "output")
+    # tester = DiscriminatorTester(sess, model, data, config, logger)
+    # tester.test()
+    #
+    #
+    # freeze_graph(config.checkpoint_dir, "output")
 if __name__ == '__main__':
     main()
+
+
+  # "train_data_path":"/media/syrix/programms/projects/GP/SuperStreaming/benchmark/skipping/dataset/train/",
+  # "val_data_path":"/media/syrix/programms/projects/GP/SuperStreaming/benchmark/skipping/dataset/val/",
+  # "test_data_path":"/media/syrix/programms/projects/GP/SuperStreaming/benchmark/skipping/dataset/test/",
+  # "summary_dir":"/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/saved_models/summary/",
+  # "checkpoint_dir":"/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/saved_models/checkpoint/"
