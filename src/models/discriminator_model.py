@@ -29,7 +29,10 @@ class DiscriminatorModel(BaseModel):
 
     def __max_pool_2d(self, x):
         return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
-
+    
+    def __average_pool_2d(self, x):
+        return tf.nn.avg_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+    
     def __convolution_layer(self, input_x, shape, strides=None):
         if strides is None:
             strides = [1, 1, 1, 1]
@@ -68,34 +71,34 @@ class DiscriminatorModel(BaseModel):
         self.hold_prob = tf.placeholder(tf.float32, name="hold_prob")
 
         convo_1 = self.__conv_bn_layer(concat, shape=[5, 5, 6, 32])
-        convo_1_pooling = self.__max_pool_2d(convo_1)
-        dropout_1 = tf.nn.dropout(convo_1_pooling, self.hold_prob)
+        dropout_1 = tf.nn.dropout(convo_1, self.hold_prob)
+        convo_1_pooling = self.__average_pool_2d(dropout_1)
+        
+        convo_2 = self.__conv_bn_layer(convo_1_pooling, shape=[3, 3, 32, 64])
+        dropout_2 = tf.nn.dropout(convo_2, self.hold_prob)
+        convo_2_pooling = self.__average_pool_2d(dropout_2)
 
-        convo_2 = self.__conv_bn_layer(dropout_1, shape=[3, 3, 32, 64])
-        convo_2_pooling = self.__max_pool_2d(convo_2)
-        dropout_2 = tf.nn.dropout(convo_2_pooling, self.hold_prob)
+        convo_3 = self.__conv_bn_layer(convo_2_pooling, shape=[3, 3, 64, 128])
+        dropout_3 = tf.nn.dropout(convo_3, self.hold_prob)
+        convo_3_pooling = self.__average_pool_2d(dropout_3)
 
-        convo_3 = self.__conv_bn_layer(dropout_2, shape=[3, 3, 64, 128])
-        convo_3_pooling = self.__max_pool_2d(convo_3)
-        dropout_3 = tf.nn.dropout(convo_3_pooling, self.hold_prob)
+        convo_4 = self.__conv_bn_layer(convo_3_pooling, shape=[3, 3, 128, 256])
+        dropout_4 = tf.nn.dropout(convo_4, self.hold_prob)
+        convo_4_pooling = self.__average_pool_2d(dropout_4)
 
-        convo_4 = self.__conv_bn_layer(dropout_3, shape=[3, 3, 128, 256])
-        convo_4_pooling = self.__max_pool_2d(convo_4)
-        dropout_4 = tf.nn.dropout(convo_4_pooling, self.hold_prob)
-
-        flattened = tf.reshape(dropout_4,
+        flattened = tf.reshape(convo_4_pooling,
                                [-1, 16 * 16 * 256])
 
-        full_layer_1 = self.__normal_full_layer(flattened, 1024)
+        full_layer_1 = self.__normal_full_layer(flattened, 256)
         batch_norm_6 = self.__batch_norm(full_layer_1)
         full_dropout_1 = tf.nn.dropout(batch_norm_6, self.hold_prob)
 
-        full_layer_2 = self.__normal_full_layer(full_dropout_1, 1024)
-        batch_norm_7 = self.__batch_norm(full_layer_2)
-        full_dropout_2 = tf.nn.dropout(batch_norm_7, self.hold_prob)
+#         full_layer_2 = self.__normal_full_layer(full_dropout_1, 1024)
+#         batch_norm_7 = self.__batch_norm(full_layer_2)
+#         full_dropout_2 = tf.nn.dropout(batch_norm_7, self.hold_prob)
 
 
-        self.y_pred = self.__normal_full_layer(full_dropout_2, 1)
+        self.y_pred = self.__normal_full_layer(full_dropout_1, 1)
 
         self.predictions = tf.round(tf.nn.sigmoid(self.y_pred), name="output")
 
