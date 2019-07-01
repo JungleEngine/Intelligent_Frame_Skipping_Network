@@ -24,7 +24,7 @@ def main():
     tf_config.gpu_options.per_process_gpu_memory_fraction = config.per_process_gpu_memory_fraction
 
     sess = tf.Session()
-    data = DataGenerator(config, training=True, testing=True)
+    data = DataGenerator(config, training=True, testing=False)
     model = DiscriminatorModel(config)
     model.load(sess)
     logger = Logger(sess, config)
