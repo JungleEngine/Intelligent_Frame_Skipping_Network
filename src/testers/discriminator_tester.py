@@ -25,8 +25,8 @@ class DiscriminatorTester(BaseTest):
     def test_step(self):
         batch_x, batch_y = self.data.next_batch(batch_type="test")
         feed_dict = {self.model.x1: batch_x[:, 0], self.model.x2: batch_x[:, 1],
-                     self.model.y: batch_y, self.model.is_training: 0,
-                     self.model.hold_prob: 1.0}
+                     self.model.y: batch_y, self.model.is_training: 0, self.model.hold_prob_conv: 1.0,
+                     self.model.hold_prob_fc: 1.0}
 
         loss, acc = self.sess.run([self.model.cross_entropy, self.model.accuracy],
                                   feed_dict=feed_dict)

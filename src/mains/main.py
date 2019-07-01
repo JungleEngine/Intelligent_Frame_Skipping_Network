@@ -12,10 +12,10 @@ from src.utils.utils import get_args, freeze_graph
 
 def main():
     try:
-        args = get_args()
+        # args = get_args()
         # print(args.config)
-        # config = processing_config("/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/configs/config_model.json")
-        config = processing_config(args.config)
+        config = processing_config("/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/configs/config_model.json")
+        # config = processing_config(args.config)
     except:
         print("Missing or invalid arguments")
         exit(0)
