@@ -11,7 +11,7 @@
 
 
   "train_data_path":"/content/drive/My Drive/dataset_gp",
-  "val_data_path":"",
+  "val_data_path":"/content/drive/My Drive/dataset_gp_val",
   "test_data_path":"",
   "summary_dir":"/content/Intelligent_Frame_Skipping_Network/saved_models/summary/",
   "checkpoint_dir":"/content/Intelligent_Frame_Skipping_Network/saved_models/checkpoint/"
