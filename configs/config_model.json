@@ -3,7 +3,7 @@
   "learning_rate": 0.0001,
   "batch_size": 16,
   "val_per_epoch": 1,
-  "state_size": [256, 256, 3],
+  "state_size": [128, 128, 3],
   "max_to_keep":1,
   "use_val":true,
   "per_process_gpu_memory_fraction":1,
