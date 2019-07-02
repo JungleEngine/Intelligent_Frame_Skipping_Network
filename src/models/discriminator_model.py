@@ -73,15 +73,15 @@ class DiscriminatorModel(BaseModel):
 
         convo_1 = self.__conv_bn_layer(concat, shape=[5, 5, 6, 8])
         dropout_1 = tf.nn.dropout(convo_1, self.hold_prob_conv)
-        convo_1_pooling = self.__average_pool_2d(dropout_1)
+        convo_1_pooling = self.__max_pool_2d(dropout_1)
         
         convo_2 = self.__conv_bn_layer(convo_1_pooling, shape=[3, 3, 8, 16])
         dropout_2 = tf.nn.dropout(convo_2, self.hold_prob_conv)
-        convo_2_pooling = self.__average_pool_2d(dropout_2)
+        convo_2_pooling = self.__max_pool_2d(dropout_2)
 
         convo_3 = self.__conv_bn_layer(convo_2_pooling, shape=[3, 3, 16, 32])
         dropout_3 = tf.nn.dropout(convo_3, self.hold_prob_conv)
-        convo_3_pooling = self.__average_pool_2d(dropout_3)
+        convo_3_pooling = self.__max_pool_2d(dropout_3)
 
         flattened = tf.reshape(convo_3_pooling,
                                [-1, 16 * 16 * 32])
