@@ -86,7 +86,7 @@ class DiscriminatorModel(BaseModel):
         flattened = tf.reshape(convo_3_pooling,
                                [-1, 32 * 32 * 32])
 
-        full_layer_1 = self.__normal_full_layer(flattened, 64)
+        full_layer_1 = self.__normal_full_layer(flattened, 32)
         batch_norm_6 = self.__batch_norm(full_layer_1)
         full_dropout_1 = tf.nn.dropout(batch_norm_6, self.hold_prob_fc)
 
