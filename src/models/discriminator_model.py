@@ -79,19 +79,24 @@ class DiscriminatorModel(BaseModel):
         dropout_2 = tf.nn.dropout(convo_2, self.hold_prob_conv)
         convo_2_pooling = self.__average_pool_2d(dropout_2)
 
-        flattened = tf.reshape(convo_2_pooling,
-                               [-1, 32 * 32 * 32])
+        
+        convo_3 = self.__conv_bn_layer(convo_2_pooling, shape=[3, 3, 32, 64])
+        dropout_3 = tf.nn.dropout(convo_3, self.hold_prob_conv)
+        convo_3_pooling = self.__average_pool_2d(dropout_3)
+        
+        flattened = tf.reshape(convo_3_pooling,
+                               [-1, 16 * 16 * 64])
 
-#         full_layer_1 = self.__normal_full_layer(flattened, 32)
-#         batch_norm_6 = self.__batch_norm(full_layer_1)
-#         full_dropout_1 = tf.nn.dropout(batch_norm_6, self.hold_prob_fc)
+        full_layer_1 = self.__normal_full_layer(flattened, 128)
+        batch_norm_6 = self.__batch_norm(full_layer_1)
+        full_dropout_1 = tf.nn.dropout(batch_norm_6, self.hold_prob_fc)
 
 #         full_layer_2 = self.__normal_full_layer(full_dropout_1, 1024)
 #         batch_norm_7 = self.__batch_norm(full_layer_2)
 #         full_dropout_2 = tf.nn.dropout(batch_norm_7, self.hold_prob)
 
 
-        self.y_pred = self.__normal_full_layer(flattened, 1)
+        self.y_pred = self.__normal_full_layer(full_dropout_1, 1)
 
         self.predictions = tf.round(tf.nn.sigmoid(self.y_pred), name="output")
 
