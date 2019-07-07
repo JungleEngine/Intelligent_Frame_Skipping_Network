@@ -60,7 +60,7 @@ class DiscriminatorModel(BaseModel):
             return tf.nn.leaky_relu(_conv)
 
     def build_model(self):
-        self.is_training = tf.placeholder_with_default(1, shape=(), name="is_training")
+        self.is_training = tf.placeholder_with_default(0, shape=(), name="is_training")
 
         self.x1 = tf.placeholder(tf.float32, shape=[None] + self.config.state_size, name="input_1")
         self.x2 = tf.placeholder(tf.float32, shape=[None] + self.config.state_size, name="input_2")
