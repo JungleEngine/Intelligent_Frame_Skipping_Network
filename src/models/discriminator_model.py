@@ -75,7 +75,7 @@ class DiscriminatorModel(BaseModel):
         dropout_1 = tf.nn.dropout(convo_1, self.hold_prob_conv)
         convo_1_pooling = self.__average_pool_2d(dropout_1)
         
-        convo_2 = self.__conv_bn_layer(convo_1_pooling, shape=[3, 3, 8, 32])
+        convo_2 = self.__conv_bn_layer(convo_1_pooling, shape=[3, 3, 16, 32])
         dropout_2 = tf.nn.dropout(convo_2, self.hold_prob_conv)
         convo_2_pooling = self.__average_pool_2d(dropout_2)
 
