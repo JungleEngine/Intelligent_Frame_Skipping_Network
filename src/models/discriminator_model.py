@@ -48,7 +48,7 @@ class DiscriminatorModel(BaseModel):
 
     def __batch_norm(self, input_layer):
         return tf.contrib.layers.batch_norm(input_layer, activation_fn=tf.nn.leaky_relu,
-                                            is_training=tf.cast(self.is_training[0], tf.bool))
+                                            is_training=tf.cast(self.is_training, tf.bool))
 
     def __conv_bn_layer(self, input_layer, shape, strides=None, use_bn=True):
         if strides is None:
@@ -60,7 +60,7 @@ class DiscriminatorModel(BaseModel):
             return tf.nn.leaky_relu(_conv)
 
     def build_model(self):
-        self.is_training = tf.placeholder(tf.int16, shape=[1], name="is_training")
+        self.is_training = tf.placeholder_with_default(1, name="is_training")
 
         self.x1 = tf.placeholder(tf.float32, shape=[None] + self.config.state_size, name="input_1")
         self.x2 = tf.placeholder(tf.float32, shape=[None] + self.config.state_size, name="input_2")
@@ -68,8 +68,8 @@ class DiscriminatorModel(BaseModel):
         concat = tf.concat([self.x1, self.x2], -1)
 
         self.y = tf.placeholder(tf.float32, shape=[None, 1])
-        self.hold_prob_conv = tf.placeholder(tf.float32, shape=[1], name="hold_prob_conv")
-        self.hold_prob_fc = tf.placeholder(tf.float32, shape=[1], name="hold_prob_fc")
+        self.hold_prob_conv = tf.placeholder_with_default(1, name="hold_prob_conv")
+        self.hold_prob_fc = tf.placeholder_with_default(1, name="hold_prob_fc")
 
         convo_1 = self.__conv_bn_layer(concat, shape=[5, 5, 6, 16])
         dropout_1 = tf.nn.dropout(convo_1, self.hold_prob_conv[0])
