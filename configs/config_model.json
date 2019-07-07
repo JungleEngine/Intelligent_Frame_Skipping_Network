@@ -1,20 +1,20 @@
+
 {
   "num_epochs": 100,
   "learning_rate": 0.0001,
   "batch_size": 16,
   "val_per_epoch": 1,
-  "state_size": [256, 256, 3],
+  "state_size": [128, 128, 3],
   "max_to_keep":1,
   "use_val":true,
   "per_process_gpu_memory_fraction":1,
 
 
 
-  "train_data_path":"/content/drive/My Drive/dataset_gp/",
-  "val_data_path":"/content/drive/My Drive/dataset_gp_val/",
+  "train_data_path":"/media/syrix/programms/projects/GP/SuperStreaming/benchmark/skipping/dataset/train/",
+  "val_data_path":"/media/syrix/programms/projects/GP/SuperStreaming/benchmark/skipping/dataset/val/",
   "test_data_path":"",
-  "summary_dir":"/content/drive/My Drive/Intelligent_Frame_Skipping_Network/saved_models/summary/",
-  "checkpoint_dir":"/content/drive/My Drive/Intelligent_Frame_Skipping_Network/saved_models/checkpoint/"
+  "summary_dir":"/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/saved_models/summary/",
+  "checkpoint_dir":"/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/saved_models/checkpoint/"
 
 }
-

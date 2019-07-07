@@ -14,8 +14,8 @@ def main():
     try:
         args = get_args()
         # print(args.config)
-        # config = processing_config("/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/configs/config_model.json")
-        config = processing_config(args.config)
+        config = processing_config("/media/syrix/programms/projects/GP/Intelligent_Frame_Skipping_Network/configs/config_model.json")
+        # config = processing_config(args.config)
     except:
         print("Missing or invalid arguments")
         exit(0)
@@ -29,14 +29,14 @@ def main():
     model.load(sess)
     logger = Logger(sess, config)
 
-    trainer = DiscriminatorTrainer(sess, model, data, config, logger)
-    trainer.train()
+    # trainer = DiscriminatorTrainer(sess, model, data, config, logger)
+    # trainer.train()
 
     # tester = DiscriminatorTester(sess, model, data, config, logger)
     # tester.test()
     #
     #
-    # freeze_graph(config.checkpoint_dir, "output")
+    freeze_graph(config.checkpoint_dir, "output")
 if __name__ == '__main__':
     main()
 
