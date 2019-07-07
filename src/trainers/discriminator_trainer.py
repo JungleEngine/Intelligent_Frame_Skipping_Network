@@ -35,7 +35,7 @@ class DiscriminatorTrainer(BaseTrain):
         batch_x, batch_y = self.data.next_batch(batch_type="train")
         feed_dict = {self.model.x1: batch_x[:, 0], self.model.x2: batch_x[:, 1],
                      self.model.y: batch_y, self.model.is_training: 1, self.model.hold_prob_conv: 0.2,
-                     self.model.hold_prob_fc: 0.4}
+                     self.model.hold_prob_fc: 0.3}
 
         # Run training for step first with dropout then calculate loss and acc without dropout.
         self.sess.run([self.model.train_step, self.model.cross_entropy, self.model.accuracy],
