@@ -87,7 +87,7 @@ class DiscriminatorModel(BaseModel):
         dropout_4 = tf.nn.dropout(convo_4, self.hold_prob_conv)
         convo_4_pooling = self.__average_pool_2d(dropout_4)
         
-        flattened = tf.reshape(convo_3_pooling,
+        flattened = tf.reshape(convo_4_pooling,
                                [-1, 8 * 8 * 128])
 
         full_layer_1 = self.__normal_full_layer(flattened, 128)
