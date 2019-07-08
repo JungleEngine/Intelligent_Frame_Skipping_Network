@@ -71,7 +71,7 @@ class DiscriminatorModel(BaseModel):
         self.hold_prob_conv = tf.placeholder_with_default(1.0,shape=(), name="hold_prob_conv")
         self.hold_prob_fc = tf.placeholder_with_default(1.0,shape=(), name="hold_prob_fc")
 
-        convo_1 = self.__conv_bn_layer(concat, shape=[5, 5, 6, 16])
+        convo_1 = self.__conv_bn_layer(concat, shape=[3, 3, 6, 16])
         dropout_1 = tf.nn.dropout(convo_1, self.hold_prob_conv)
         convo_1_pooling = self.__average_pool_2d(dropout_1)
         
@@ -83,8 +83,12 @@ class DiscriminatorModel(BaseModel):
         dropout_3 = tf.nn.dropout(convo_3, self.hold_prob_conv)
         convo_3_pooling = self.__average_pool_2d(dropout_3)
         
+        convo_4 = self.__conv_bn_layer(convo_3_pooling, shape=[3, 3, 64, 128])
+        dropout_4 = tf.nn.dropout(convo_4, self.hold_prob_conv)
+        convo_4_pooling = self.__average_pool_2d(dropout_4)
+        
         flattened = tf.reshape(convo_3_pooling,
-                               [-1, 16 * 16 * 64])
+                               [-1, 8 * 8 * 128])
 
         full_layer_1 = self.__normal_full_layer(flattened, 128)
         batch_norm_6 = self.__batch_norm(full_layer_1)
