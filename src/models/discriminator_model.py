@@ -27,18 +27,22 @@ class DiscriminatorModel(BaseModel):
         return tf.Variable(init_bias_vals)
 
 
-    def __max_pool_2d(self, x):
-        return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+    def __max_pool_2d(self, x, ksize=None, strides=None):
+        if strides is None:
+            strides = [1, 2, 2, 1]
+        if ksize is None:
+            ksize = [1, 2, 2, 1]
+        return tf.nn.max_pool(x, ksize=ksize, strides=strides, padding='valid')
     
     def __average_pool_2d(self, x):
         return tf.nn.avg_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
     
-    def __convolution_layer(self, input_x, shape, strides=None):
+    def __convolution_layer(self, input_x, shape, padding='valid', strides=None):
         if strides is None:
             strides = [1, 1, 1, 1]
         W = self.__init_weights(shape)
         b = self.__init_bias([shape[3]])
-        return tf.nn.conv2d(input_x, W, strides=strides, padding='SAME') + b
+        return tf.nn.conv2d(input_x, W, strides=strides, padding='valid') + b
 
     def __normal_full_layer(self, input_layer, size):
         input_size = int(input_layer.get_shape()[1])  # becase 0 is the number of training examples.
@@ -50,10 +54,10 @@ class DiscriminatorModel(BaseModel):
         return tf.contrib.layers.batch_norm(input_layer, activation_fn=tf.nn.relu,
                                             is_training=tf.cast(self.is_training, tf.bool))
 
-    def __conv_bn_layer(self, input_layer, shape, strides=None, use_bn=True):
+    def __conv_bn_layer(self, input_layer, shape, padding='valid', strides=None, use_bn=True):
         if strides is None:
             strides = [1, 1, 1, 1]
-        _conv = self.__convolution_layer(input_layer, shape=shape, strides=strides)
+        _conv = self.__convolution_layer(input_layer, shape=shape, padding=padding, strides=strides)
         if use_bn:
             return self.__batch_norm(_conv)
         else:
@@ -71,23 +75,23 @@ class DiscriminatorModel(BaseModel):
         self.hold_prob_conv = tf.placeholder_with_default(1.0,shape=(), name="hold_prob_conv")
         self.hold_prob_fc = tf.placeholder_with_default(1.0,shape=(), name="hold_prob_fc")
 
-        convo_1 = self.__conv_bn_layer(concat, shape=[5, 5, 6, 16])
+        convo_1 = self.__conv_bn_layer(concat, shape=[7, 7, 6, 96], strides=[1, 4, 4, 1], padding='valid')
         dropout_1 = tf.nn.dropout(convo_1, self.hold_prob_conv)
-        convo_1_pooling = self.__max_pool_2d(dropout_1)
+        convo_1_pooling = self.__max_pool_2d(dropout_1, ksize=[1, 3, 3, 1])
         
-        convo_2 = self.__conv_bn_layer(convo_1_pooling, shape=[3, 3, 16, 32])
+        convo_2 = self.__conv_bn_layer(convo_1_pooling, shape=[5, 5, 96, 256], padding='same')
         dropout_2 = tf.nn.dropout(convo_2, self.hold_prob_conv)
-        convo_2_pooling = self.__max_pool_2d(dropout_2)
+        convo_2_pooling = self.__max_pool_2d(dropout_2, ksize=[1, 3, 3, 1])
         
-        convo_3 = self.__conv_bn_layer(convo_2_pooling, shape=[3, 3, 32, 64])
+        convo_3 = self.__conv_bn_layer(convo_2_pooling, shape=[3, 3, 256, 384], padding='same')
         dropout_3 = tf.nn.dropout(convo_3, self.hold_prob_conv)
-        convo_3_pooling = self.__max_pool_2d(dropout_3)
+        convo_3_pooling = self.__max_pool_2d(dropout_3, ksize=[1, 3, 3, 1])
         
         flattened = tf.reshape(convo_3_pooling,
-                               [-1, 16 * 16 * 64])
-
+                               [-1, 6 * 6 * 384])
+                
         self.y_pred = self.__normal_full_layer(flattened, 1)
-
+        
         self.predictions = tf.round(tf.nn.sigmoid(self.y_pred), name="output")
 
         with tf.name_scope("loss"):
