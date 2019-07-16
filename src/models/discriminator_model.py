@@ -88,7 +88,7 @@ class DiscriminatorModel(BaseModel):
         convo_3_pooling = self.__max_pool_2d(dropout_3, ksize=[1, 3, 3, 1])
         
         flattened = tf.reshape(convo_3_pooling,
-                               [-1, 6 * 6 * 384])
+                               [-1, 3 * 3 * 384])
                 
         self.y_pred = self.__normal_full_layer(flattened, 1)
         
